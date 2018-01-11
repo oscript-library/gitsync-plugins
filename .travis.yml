@@ -1,0 +1,66 @@
+language: generic
+
+sudo: required
+
+notifications:
+  email: false
+  
+services:
+  - docker
+
+before_install:
+ # Load cached docker images
+  - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+
+before_cache: 
+  # Save tagged docker images
+  - >
+    mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
+
+install: 
+    - docker pull harmit/ci-image
+
+env:
+  global:
+  - GIT_EMAIL=ci@mail
+  - GIT_NAME=ci
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/docker'
+jobs:
+  include:
+    - stage: Тестирование 
+      script:  
+      - docker version
+      - docker run -it -v $(pwd):/work_dir harmit/ci-image sh -c 'cd /work_dir; sh /work_dir/travis-ci.sh; exit' | tee /tmp/test.log
+      - ! grep -q 'Тестирование завершилось неудачно!' /tmp/test.log
+      after_success:
+      - bash <(curl -s https://codecov.io/bash)
+
+    - stage: Сборка и публикация github & hub.oscript.io
+      script: skip 
+      before_deploy:
+        - opm build ./
+      deploy:
+        - provider: releases
+          api_key: "$GITHUB_OAUTH_TOKEN"
+          file_glob: true
+          file: gitsync*.ospx
+          skip_cleanup: true
+          on:
+            branch: master
+            tags: true
+        - provider: script
+          skip_cleanup: true
+          script: opm push --token $GITHUB_OAUTH_TOKEN --channel dev --file ./preinstalled_plugins_gitsync-*.ospx;
+          on:
+            branch: develop
+        - provider: script
+          skip_cleanup: true
+          script: opm push --token $GITHUB_OAUTH_TOKEN --channel stable --file ./preinstalled_plugins_gitsync-*.ospx;
+          on:
+            branch: master
+            tags: true
