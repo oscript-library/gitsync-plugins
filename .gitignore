@@ -1,1 +1,16 @@
 *.ospx
+
+build/*
+
+bin\*
+tests\.xml
+
+exec\.log
+
+bdd-log\.xml
+
+.enabled-plugins
+
+*.ospx
+oscript_modules/
+src/cmd/oscript.cfg
