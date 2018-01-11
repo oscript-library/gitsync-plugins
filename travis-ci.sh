@@ -34,7 +34,7 @@ opm install cli;
 opm install -f ./gitsync.ospx -dest /tmp/; 
 
 opm build -out ./build ./;
-opm install -f ./build/$(ls -a ./build | grep ^preinstalled) -dest /tmp/gitsync/installed_plugins;
+opm install -f ./build/$(ls -a ./build | grep ^preinstalled) -dest /tmp/gitsync/plugins;
 
 opm install; 
 opm test; 
