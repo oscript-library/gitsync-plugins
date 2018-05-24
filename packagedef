@@ -4,7 +4,7 @@
 //
 
 
-Описание.Имя("preinstalled_plugins_gitsync")
+Описание.Имя("embedded_plugins_gitsync")
         .Версия("1.0.0")
         .Автор("Khorev A.A. and SiverBulleters")
         .АдресАвтора("khorevaa@gmail.com")
