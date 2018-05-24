@@ -1,42 +1,23 @@
 
-# set -e
-
-GITNAME="${GIT_NAME:-"ci"}"
-GITEMAIL="${GIT_EMAIL:-"ci@me"}"
+set -e
 
 git config --global user.name $GITNAME
 git config --global user.email $GITEMAIL
 
+echo "Устанавливаю версию OScript <$OSCRIPT_VERSION>"
+curl http://oscript.io/downloads/$OSCRIPT_VERSION/deb > oscript.deb 
+dpkg -i oscript.deb 
+rm -f oscript.deb
 
-
-# if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
-    # if [ ! test $(wine --version) ]; then
-
-    echo "Устанавливаю Wine"
-    # add-apt-repository ppa:ubuntu-wine/ppa
-    apt-get update
-    apt-get install -y wine winetricks
-   
-    # fi
-# fi
-mkdir ./build
-
-wget -O os.deb http://oscript.io/downloads/1_0_19/onescript-engine_1.0.19_all.deb
-sudo dpkg -i *.deb; sudo apt install -f
-rm os.deb
-rm -R /tmp/gitsync/
-wget -O ./gitsync.ospx $(curl -s https://api.github.com/repos/khorevaa/gitsync/releases/latest | grep 'gitsync-' | cut -d\" -f4)
-# wget -O gitsync.ospx https://github.com/khorevaa/gitsync/releases/download/3.0.0-beta/ 
-opm install opm; 
+echo "Установка зависимостей"
 opm install 1testrunner; 
-opm install 1bdd; 
-opm install cli;
-opm install -f ./gitsync.ospx -dest /tmp/; 
-
-opm build -out ./build ./;
-opm install -f ./build/$(ls -a ./build | grep ^preinstalled) -dest /tmp/gitsync/plugins;
+opm install 1bdd;
+opm install coverage;
+opm update opm 
 
 opm install; 
-opm test; 
+opm run install-gitsync;
 
-rm -R ./build
+echo "Запуск тестирования пакета"
+opm run coverage; 
+
