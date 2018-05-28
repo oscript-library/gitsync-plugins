@@ -2,12 +2,12 @@
 
 build/*
 
-bin\*
-tests\.xml
+bin/*
+tests/*.xml
 
-exec\.log
+exec/*.log
 
-bdd-log\.xml
+bdd-log/*.xml
 
 .enabled-plugins
 
