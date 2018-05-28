@@ -60,7 +60,7 @@
 //   Строка - имя лога плагина
 //
 Функция ИмяЛога() Экспорт
-	Возврат "oscript.lib.gitsync.plugins.disable-support";
+	Возврат "oscript.lib.gitsync3.plugins.disable-support";
 КонецФункции
 
 #КонецОбласти

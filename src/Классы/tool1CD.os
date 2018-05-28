@@ -62,7 +62,7 @@
 //   Строка - имя лога плагина
 //
 Функция ИмяЛога() Экспорт
-	Возврат "oscript.lib.gitsync.plugins.tool1CD";
+	Возврат "oscript.lib.gitsync3.plugins.tool1CD";
 КонецФункции
 
 #КонецОбласти
