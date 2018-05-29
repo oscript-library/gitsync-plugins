@@ -58,7 +58,7 @@
 //   Строка - имя лога плагина
 //
 Функция ИмяЛога() Экспорт
-	Возврат "oscript.lib.gitsync3.plugins.check-comments";
+	Возврат "oscript.lib.gitsync.plugins.check-comments";
 КонецФункции
 
 #КонецОбласти
