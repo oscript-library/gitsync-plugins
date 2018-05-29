@@ -61,7 +61,7 @@
 //   Строка - имя лога плагина
 //
 Функция ИмяЛога() Экспорт
-	Возврат "oscript.lib.gitsync3.plugins.unpackForm";
+	Возврат "oscript.lib.gitsync.plugins.unpackForm";
 КонецФункции
 
 #КонецОбласти

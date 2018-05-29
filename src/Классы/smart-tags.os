@@ -61,7 +61,7 @@
 //   Строка - имя лога плагина
 //
 Функция ИмяЛога() Экспорт
-	Возврат "oscript.lib.gitsync3.plugins.smart-tags";
+	Возврат "oscript.lib.gitsync.plugins.smart-tags";
 КонецФункции
 
 #Область Подписки_на_события
