@@ -2,7 +2,7 @@
 
 build/*
 
-bin/*
+bin/gitsync/*
 tests/*.xml
 
 exec/*.log
