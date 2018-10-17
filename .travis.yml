@@ -29,6 +29,7 @@ env:
   - PACKAGE_NAME=gitsync-plugins
   matrix:
   - OSCRIPT_VERSION=1_0_20
+  - OSCRIPT_VERSION=1_0_21
   - OSCRIPT_VERSION=night-build
 matrix:
   allow_failures:
