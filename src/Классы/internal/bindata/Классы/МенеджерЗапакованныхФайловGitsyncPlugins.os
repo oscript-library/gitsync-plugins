@@ -2,6 +2,7 @@
 
 	ИндексФайлов = Новый Соответствие;
 	ИндексФайлов.Вставить("v8unpack.dll", "v8unpack_gitsync_plugins");
+	ИндексФайлов.Вставить("zlib1.dll", "zlib1_gitsync_plugins");
 	ИндексФайлов.Вставить("cTool_1CD.exe", "cTool_1CD_gitsync_plugins");
 
 	Возврат ИндексФайлов;
