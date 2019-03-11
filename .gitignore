@@ -3,6 +3,8 @@
 build/*
 
 bin/gitsync/*
+bin/gitsync.exe
+bin/gitsync.bat
 tests/*.xml
 
 exec/*.log
