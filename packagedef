@@ -23,8 +23,8 @@
 
 Описание.Имя("gitsync-plugins")
         .Версия("1.0.5")
-        .Автор("Khorev A.A. and SiverBulleters")
-        .АдресАвтора("khorevaa@gmail.com")
+        .Автор("Khorev A.A. and SilverBulleters")
+        .АдресАвтора("khorevaa@gmail.com,help@silverbulleters.org")
         .Описание("Набор предустановленных плагинов для gitsync")
         .ВерсияСреды("1.0.20")
         .ВключитьФайл("src")
