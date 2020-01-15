@@ -5,9 +5,9 @@
 ## Первоначальная настройка
 
 - Необходимо предварительно выполнить команду
-  - `opm run ./tasks/install-gitsync.os `
+  - `opm run install-gitsync`
   - он устанавливает версию gitsync в каталог bin
 - После необходимо собрать и установить плагины из исходников 
-  - `opm run ./tasks/testing-build.os`
+  - `opm run testing-build`
 
 А вот потом можно запускать тесты )
