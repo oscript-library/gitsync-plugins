@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="06ed7eaa-6e46-4cef-bcc9-b1ce5e9fb10a">
+  <name>Конфигурация</name>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="75d9c877-7d33-48cf-afe4-3bb6f936c856"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="c47fd4f4-1f53-4d93-b3bf-dc55c67d1b5b"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="e2977188-7c6e-4664-bd45-4b4f5caab007"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="444fa55b-8f81-4628-a4d0-220c19d0555e"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="4214040c-8538-4cff-9ec2-8bbb1eb85296"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="57ca168a-fc22-4d09-9746-31b5a7f17956"/>
+  <configurationExtensionCompatibilityMode>8.3.14</configurationExtensionCompatibilityMode>
+  <defaultRunMode>OrdinaryApplication</defaultRunMode>
+  <usePurposes>PersonalComputer</usePurposes>
+  <scriptVariant>Russian</scriptVariant>
+  <version>1.1.0.1</version>
+  <defaultLanguage>Language.Русский</defaultLanguage>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <interfaceCompatibilityMode>Version8_2</interfaceCompatibilityMode>
+  <compatibilityMode>8.2.16</compatibilityMode>
+  <languages uuid="aaeceed2-655a-4dd5-aedc-9b8f2a666df3">
+    <name>Русский</name>
+    <synonym>
+      <key>ru</key>
+      <value>Русский</value>
+    </synonym>
+    <languageCode>ru</languageCode>
+  </languages>
+  <sessionParameters>SessionParameter.РежимТестированияВключен</sessionParameters>
+  <sessionParameters>SessionParameter.ПараметрыТестирования</sessionParameters>
+  <roles>Role.ПолныеПрава</roles>
+  <commonModules>CommonModule.Тестирование</commonModules>
+  <commonModules>CommonModule.ОбщийМодуль1</commonModules>
+  <catalogs>Catalog.Справочник1</catalogs>
+</mdclass:Configuration>
