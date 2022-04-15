@@ -86,7 +86,7 @@
 
 	URLРепозитория = "https://github.com/oscript-library/gitsync.git";
 	КаталогСборки = ВременныеФайлы.СоздатьКаталог();
-	Ветка = "release/3.0.0";
+	Ветка = "master";
 
 	ПутьКМанифестуСборки = "build_packagedef";
 
