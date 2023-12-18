@@ -57,4 +57,5 @@
         .ОпределяетКласс("Плагин_ЗаменаАвторов", "src/Классы/replaceAuthors.os")
         .ОпределяетКласс("Плагин_Ibcmd", "src/Классы/useIbcmd.os")
         .ОпределяетКласс("Плагин_DropConfigDump", "src/Классы/dropConfigDump.os")
+        .ОпределяетКласс("Плагин_DropSupport", "src/Классы/dropSupport.os")
         ;
