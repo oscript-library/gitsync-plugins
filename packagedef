@@ -35,7 +35,7 @@
 КонецПроцедуры
 
 Описание.Имя("gitsync-plugins")
-        .Версия("1.4.1")
+        .Версия("1.5.0")
         .Автор("Khorev A.A. and SilverBulleters")
         .АдресАвтора("khorevaa@gmail.com,help@silverbulleters.org")
         .Описание("Набор предустановленных плагинов для gitsync")
