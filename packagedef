@@ -35,7 +35,7 @@
 КонецПроцедуры
 
 Описание.Имя("gitsync-plugins")
-        .Версия("1.5.0")
+        .Версия("1.6.0")
         .Автор("Khorev A.A. and SilverBulleters")
         .АдресАвтора("khorevaa@gmail.com,help@silverbulleters.org")
         .Описание("Набор предустановленных плагинов для gitsync")
@@ -58,4 +58,5 @@
         .ОпределяетКласс("Плагин_Ibcmd", "src/Классы/useIbcmd.os")
         .ОпределяетКласс("Плагин_DropConfigDump", "src/Классы/dropConfigDump.os")
         .ОпределяетКласс("Плагин_DropSupport", "src/Классы/dropSupport.os")
+        .ОпределяетКласс("Плагин_RoboCopy", "src/Классы/roboCopy.os")
         ;
