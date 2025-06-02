@@ -2,8 +2,9 @@
 
 build/*
 
-bin/gitsync/*
+bin_gitsync/*
 bin/gitsync.exe
+bin/gitsync
 bin/build_gitsync.bat
 tests/*.xml
 
