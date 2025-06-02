@@ -141,4 +141,4 @@ jobs:
           report_paths: '**/build/reports/*.xml'
           fail_on_failure: true
           comment: true
-          check_name: 'Результаты тестов. ОС: ${{ matrix.os }}. Версия 1С: ${{ matrix.v8_version }}. Версия OneScript: ${{ steps.extract_oscript_version.outputs.version }}'
+          check_name: 'Результаты тестов. ОС: ${{ matrix.os }}. Версия 1С: ${{ matrix.v8_version }}. Версия OneScript: ${{ matrix.oscript_version }}'
