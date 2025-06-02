@@ -18,7 +18,7 @@ jobs:
         locale: ['ru_RU']
       fail-fast: false
     steps:
-      - name: Set Russian locale
+      - name: Установка локали
         if: matrix.os == startsWith(matrix.os, 'windows')
         run: |
           powershell -Command "Set-WinUILanguageOverride -Language ru-RU"
@@ -40,8 +40,8 @@ jobs:
         run: |
           opm install opm
           opm install --dev
-          opm install gitsync
-      
+          opm install gitsync # TODO: должно быть необязательно
+
       - name: Подготовка окружения (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
@@ -64,7 +64,7 @@ jobs:
           sudo apt install wine -y
 
       - name: Установка платформы 1С
-        uses: ovcharenko-di/onec-setup-action@bump-actions-cache
+        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
         with:
           type: onec # Тип устанавливаемого приложения
           onec_version: ${{ matrix.v8_version }}
@@ -81,7 +81,7 @@ jobs:
           java-version: '11'
 
       - name: Установка EDT
-        uses: ovcharenko-di/onec-setup-action@bump-actions-cache
+        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
         with:
           type: edt # Тип устанавливаемого приложения
           edt_version: ${{ matrix.edt_version }}
@@ -123,6 +123,9 @@ jobs:
         env:
             ONEC_LICENCE: ${{ secrets.ONEC_LICENCE }}
 
+      - name: Сборка пакета
+        run: opm build
+
       - name: Установка gitsync (локально)
         run: opm run install-gitsync
 
@@ -134,7 +137,7 @@ jobs:
         with:
           run: oscript ./tasks/test.os
 
-      - name: Publish Test Report
+      - name: Публикация отчета
         if: always()
         uses: mikepenz/action-junit-report@v5
         with:
