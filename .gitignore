@@ -4,11 +4,10 @@ build/*
 
 bin/gitsync/*
 bin/gitsync.exe
-bin/gitsync.bat
+bin/build_gitsync.bat
 tests/*.xml
 
-exec/*.log
-
+exec.log
 bdd-log*.xml
 
 .enabled-plugins

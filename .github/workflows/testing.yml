@@ -7,24 +7,31 @@ name: Тестирование
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        oscript_version: ['1.8.3']
-        
+        oscript_version: ['1.9.2']
+        v8_version: ['8.3.21.1624', '8.3.24.1691']
+        edt_version: ['2023.3.6']
+        os: [windows-latest, ubuntu-22.04]
+        locale: ['ru_RU']
+      fail-fast: false
     steps:
-      # Загрузка проекта
+      - name: Set Russian locale
+        if: matrix.os == startsWith(matrix.os, 'windows')
+        run: |
+          powershell -Command "Set-WinUILanguageOverride -Language ru-RU"
+          powershell -Command "Set-WinUserLanguageList ru-RU -Force"
+          powershell -Command "Set-Culture ru-RU"
+          powershell -Command "Set-WinSystemLocale ru-RU"
+
       - name: Актуализация
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.2.2
 
       # Установка OneScript конкретной версии
       - name: Установка OneScript
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-        uses: otymko/setup-onescript@v1.0
+        uses: otymko/setup-onescript@v1.5
         with:
           version: ${{ matrix.oscript_version }}
 
@@ -33,16 +40,105 @@ jobs:
         run: |
           opm install opm
           opm install --dev
-          opm install 1testrunner
-          opm install 1bdd 
-          opm install notify
-          opm install coverage
-          
-      # Задача тестирования, в результате ожидается успешное выполнение
-      - name: Тестирование Unit
-        run: oscript ./tasks/test.os true
+          opm install gitsync
       
-      # - name: Тестирование Integrated
-      #   run: | 
-      #     docker run -e OSCRIPT_VERSION=${{ matrix.oscript_version }} -v $(pwd):/work_dir harmit/ci-image sh -c 'cd /work_dir; sh /work_dir/travis-ci.sh; exit'
-      # grep 'Результат прогона тестов <Да>' /tmp/test.log
+      - name: Подготовка окружения (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+            sudo apt-get update
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y locales libwebkit2gtk-4.0-37
+            sudo localedef -i ${{ matrix.locale }} -c -f UTF-8 -A /usr/share/locale/locale.alias ${{ matrix.locale }}.UTF-8
+
+      - name: Установка libenchant1c2a (Linux)
+        if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.v8_version, '8.3.21')
+        run: |
+            sudo echo "deb http://cz.archive.ubuntu.com/ubuntu focal main universe" | sudo tee -a /etc/apt/sources.list
+            sudo apt-get update
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libenchant1c2a
+
+      - name: Установка wine (требуется для Tool1CD)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install wine -y
+
+      - name: Установка платформы 1С
+        uses: ovcharenko-di/onec-setup-action@bump-actions-cache
+        with:
+          type: onec # Тип устанавливаемого приложения
+          onec_version: ${{ matrix.v8_version }}
+          cache: true
+          cache_distr: true
+        env: 
+          ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
+          ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
+
+      - name: Установка Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Установка EDT
+        uses: ovcharenko-di/onec-setup-action@bump-actions-cache
+        with:
+          type: edt # Тип устанавливаемого приложения
+          edt_version: ${{ matrix.edt_version }}
+          cache: true
+          cache_distr: true
+        env: 
+          ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
+          ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
+
+      - name: Настройка EDT (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: .github/scripts/add-1cedtcli-ring-to-path.bat
+
+      - name: Настройка EDT (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: .github/scripts/add-1cedtcli-ring-to-path.sh
+
+      - name: Установка лицензии (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          # Создание каталога
+          sudo mkdir -p /var/1C/licenses
+            
+          # Запись лицензии в файл
+          echo "${{ secrets.ONEC_LICENCE }}" | sudo tee /var/1C/licenses/licence.lic > /dev/null
+              
+          # Назначение прав
+          sudo chmod 777 -R /var/1C/licenses
+        shell: bash
+        env:
+          ONEC_LICENCE: ${{ secrets.ONEC_LICENCE }}
+
+      - name: Установка лицензии (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: |
+            mkdir "C:\ProgramData\1C\licenses" -Force
+            echo $Env:ONEC_LICENCE | Out-File -FilePath "C:\ProgramData\1C\licenses\licence.lic" -Encoding ascii
+        shell: pwsh
+        env:
+            ONEC_LICENCE: ${{ secrets.ONEC_LICENCE }}
+
+      - name: Установка gitsync (локально)
+        run: opm run install-gitsync
+
+      - name: Тестирование
+        uses: coactions/setup-xvfb@v1
+        env:
+            EDT_VERSION: ${{ matrix.edt_version }}
+            GITSYNC_V8VERSION: ${{ matrix.v8_version }}
+        with:
+          run: oscript ./tasks/test.os
+
+      - name: Publish Test Report
+        if: always()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: '**/build/reports/*.xml'
+          fail_on_failure: true
+          comment: true
+          check_name: 'Результаты тестов. ОС: ${{ matrix.os }}. Версия 1С: ${{ matrix.v8_version }}. Версия OneScript: ${{ steps.extract_oscript_version.outputs.version }}'
