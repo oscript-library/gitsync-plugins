@@ -91,14 +91,6 @@ jobs:
           ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
           ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
 
-      - name: Настройка EDT (Windows)
-        if: startsWith(matrix.os, 'windows')
-        run: .github/scripts/add-1cedtcli-ring-to-path.bat
-
-      - name: Настройка EDT (Linux)
-        if: startsWith(matrix.os, 'ubuntu')
-        run: .github/scripts/add-1cedtcli-ring-to-path.sh
-
       - name: Установка лицензии (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
