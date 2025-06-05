@@ -3,11 +3,20 @@
 # All rights reserved.
 
 name: Тестирование
-# Любой пуш и pr в проекте
-on: [push, pull_request]
+
+on:
+  workflow_run:
+    workflows: ["Pre-testing checks"]
+    types:
+      - completed
+
+permissions:
+  checks: write
+  contents: read
 
 jobs:
   test:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -17,6 +26,7 @@ jobs:
         os: [windows-latest, ubuntu-22.04]
         locale: ['ru_RU']
       fail-fast: false
+    
     steps:
       - name: Установка локали
         if: matrix.os == startsWith(matrix.os, 'windows')
@@ -28,6 +38,10 @@ jobs:
 
       - name: Актуализация
         uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       # Установка OneScript конкретной версии
       - name: Установка OneScript
