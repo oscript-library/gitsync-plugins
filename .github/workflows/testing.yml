@@ -88,11 +88,19 @@ jobs:
           ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
           ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
 
-      - name: Установка Java
+      - name: Установка Java 11
+        if: startsWith(matrix.edt_version, '2023')
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
+
+      - name: Установка Java 17
+        if: startsWith(matrix.edt_version, '2024')
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Установка EDT
         uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
