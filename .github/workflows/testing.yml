@@ -3,7 +3,6 @@
 # All rights reserved.
 
 name: Тестирование
-
 on:
   workflow_run:
     workflows: ["Pre-testing checks"]
