@@ -3,8 +3,15 @@
 # All rights reserved.
 
 name: Тестирование
-# Любой пуш и pr в проекте
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request_target:
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  pull-requests: write
 
 jobs:
   test:
@@ -28,8 +35,6 @@ jobs:
 
       - name: Актуализация
         uses: actions/checkout@v4.2.2
-        with:
-          fetch-depth: 0
 
       # Установка OneScript конкретной версии
       - name: Установка OneScript
@@ -51,14 +56,14 @@ jobs:
             sudo DEBIAN_FRONTEND=noninteractive apt-get install -y locales libwebkit2gtk-4.0-37
             sudo localedef -i ${{ matrix.locale }} -c -f UTF-8 -A /usr/share/locale/locale.alias ${{ matrix.locale }}.UTF-8
 
-      - name: Установка libenchant1c2a (Linux)
+      - name: Установка libenchant1c2a для 8.3.21 (Linux)
         if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.v8_version, '8.3.21')
         run: |
             sudo echo "deb http://cz.archive.ubuntu.com/ubuntu focal main universe" | sudo tee -a /etc/apt/sources.list
             sudo apt-get update
             sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libenchant1c2a
 
-      - name: Установка wine (требуется для Tool1CD)
+      - name: Установка wine для Tool1CD (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo dpkg --add-architecture i386
@@ -76,16 +81,24 @@ jobs:
           ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
           ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
 
-      - name: Установка Java
+      - name: Установка Java 11
+        if: startsWith(matrix.edt_version, '2023')
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Установка Java 17
+        if: startsWith(matrix.edt_version, '2024')
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Установка EDT
         uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
         with:
-          type: edt # Тип устанавливаемого приложения
+          type: edt
           edt_version: ${{ matrix.edt_version }}
           cache: true
           cache_distr: true
@@ -117,10 +130,7 @@ jobs:
         env:
             ONEC_LICENCE: ${{ secrets.ONEC_LICENCE }}
 
-      - name: Сборка пакета
-        run: opm build
-
-      - name: Установка gitsync (локально)
+      - name: Установка gitsync локально
         run: opm run install-gitsync
 
       - name: Тестирование
@@ -132,10 +142,10 @@ jobs:
           run: oscript ./tasks/test.os
 
       - name: Публикация отчета
-        if: always()
+        if: success() || failure()
         uses: mikepenz/action-junit-report@v5
         with:
           report_paths: '**/build/reports/*.xml'
           fail_on_failure: true
           comment: true
-          check_name: 'Результаты тестов. ОС: ${{ matrix.os }}. Версия 1С: ${{ matrix.v8_version }}. Версия OneScript: ${{ matrix.oscript_version }}'
+          check_name: 'Результаты тестов. ОС: ${{ matrix.os }}. Версия 1С: ${{ matrix.v8_version }}. Версия OneScript: ${{ matrix.oscript_version }}. Версия EDT: ${{ matrix.edt_version }}'
