@@ -113,22 +113,22 @@ jobs:
           sudo mkdir -p /var/1C/licenses
             
           # Запись лицензии в файл
-          echo "${{ secrets.ONEC_LICENCE }}" | sudo tee /var/1C/licenses/licence.lic > /dev/null
+          echo "${{ secrets.ONEC_LICENSE }}" | sudo tee /var/1C/licenses/licence.lic > /dev/null
               
           # Назначение прав
           sudo chmod 777 -R /var/1C/licenses
         shell: bash
         env:
-          ONEC_LICENCE: ${{ secrets.ONEC_LICENCE }}
+          ONEC_LICENSE: ${{ secrets.ONEC_LICENSE }}
 
       - name: Установка лицензии (Windows)
         if: startsWith(matrix.os, 'windows')
         run: |
             mkdir "C:\ProgramData\1C\licenses" -Force
-            echo $Env:ONEC_LICENCE | Out-File -FilePath "C:\ProgramData\1C\licenses\licence.lic" -Encoding ascii
+            echo $Env:ONEC_LICENSE | Out-File -FilePath "C:\ProgramData\1C\licenses\licence.lic" -Encoding ascii
         shell: pwsh
         env:
-            ONEC_LICENCE: ${{ secrets.ONEC_LICENCE }}
+            ONEC_LICENSE: ${{ secrets.ONEC_LICENSE }}
 
       - name: Установка gitsync локально
         run: opm run install-gitsync
