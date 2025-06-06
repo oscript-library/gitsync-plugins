@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-22.04]
         oscript_version: ['1.9.2']
         v8_version: ['8.3.24.1691']
         edt_version: ['2024.2.5']
