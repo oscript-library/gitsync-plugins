@@ -4,16 +4,23 @@
 
 name: Контроль качества
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request_target:
+  workflow_dispatch:
+
 jobs:
-  build:
+  sonar:
     if: github.repository == 'oscript-library/gitsync-plugins'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-22.04]
         oscript_version: ['1.9.2']
+        v8_version: ['8.3.24.1691']
+        edt_version: ['2024.2.5']
+        locale: ['ru_RU']
 
     steps:
       - name: Актуализация
@@ -36,11 +43,73 @@ jobs:
           opm install --dev
           opm install gitsync # TODO: должно быть необязательно
 
+      - name: Подготовка окружения (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+            sudo apt-get update
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y locales libwebkit2gtk-4.0-37
+            sudo localedef -i ${{ matrix.locale }} -c -f UTF-8 -A /usr/share/locale/locale.alias ${{ matrix.locale }}.UTF-8
+
+      - name: Установка wine для Tool1CD (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install wine -y
+
+      - name: Установка платформы 1С
+        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
+        with:
+          type: onec # Тип устанавливаемого приложения
+          onec_version: ${{ matrix.v8_version }}
+          cache: true
+          cache_distr: true
+        env: 
+          ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
+          ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
+
+      - name: Установка Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Установка EDT
+        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
+        with:
+          type: edt
+          edt_version: ${{ matrix.edt_version }}
+          cache: true
+          cache_distr: true
+        env: 
+          ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
+          ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
+
+      - name: Установка лицензии (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          # Создание каталога
+          sudo mkdir -p /var/1C/licenses
+            
+          # Запись лицензии в файл
+          echo "${{ secrets.ONEC_LICENSE }}" | sudo tee /var/1C/licenses/licence.lic > /dev/null
+              
+          # Назначение прав
+          sudo chmod 777 -R /var/1C/licenses
+        shell: bash
+        env:
+          ONEC_LICENSE: ${{ secrets.ONEC_LICENSE }}
+
       - name: Установка gitsync локально
         run: opm run install-gitsync
 
       - name: Покрытие кода
-        run: oscript ./tasks/coverage.os true
+        uses: coactions/setup-xvfb@v1
+        env:
+            EDT_VERSION: ${{ matrix.edt_version }}
+            GITSYNC_V8VERSION: ${{ matrix.v8_version }}
+        with:
+          run: opm run coverage
 
       - name: Извлечение версии пакета
         shell: bash
@@ -48,10 +117,10 @@ jobs:
         id: extract_version
 
       - name: Установка Sonar-scanner
-        uses: warchant/setup-sonar-scanner@v7
+        uses: warchant/setup-sonar-scanner@v8
 
       - name: Анализ в SonarQube (branch)
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: sonar-scanner
             -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
             -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }}

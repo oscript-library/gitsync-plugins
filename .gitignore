@@ -2,6 +2,8 @@
 
 build/*
 
+coverage/*
+
 bin_gitsync/*
 bin/gitsync.exe
 bin/gitsync
