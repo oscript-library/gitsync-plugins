@@ -35,14 +35,15 @@ jobs:
 
       - name: Актуализация
         uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
-      # Установка OneScript конкретной версии
       - name: Установка OneScript
         uses: otymko/setup-onescript@v1.5
         with:
           version: ${{ matrix.oscript_version }}
 
-      # Установка зависимостей пакета
       - name: Установка зависимостей
         run: |
           opm install opm
