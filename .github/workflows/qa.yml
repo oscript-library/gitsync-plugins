@@ -123,8 +123,9 @@ jobs:
 
       - name: Анализ в SonarQube (branch)
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         run: sonar-scanner
-            -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
             -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }}
             -Dsonar.branch.name=${{ steps.extract_branch.outputs.branch }}
             -Dsonar.projectVersion=${{ steps.extract_version.outputs.version }}
@@ -132,10 +133,10 @@ jobs:
       # https://docs.sonarqube.org/latest/analysis/pull-request/
       - name: Анализ в SonarQube (pull-request)
         if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         run: sonar-scanner
-            -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
             -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }}
-            -Dsonar.branch.name=${{ steps.extract_branch.outputs.branch }}
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
             -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
             -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
