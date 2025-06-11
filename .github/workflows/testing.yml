@@ -62,7 +62,7 @@ jobs:
         run: |
             sudo echo "deb http://cz.archive.ubuntu.com/ubuntu focal main universe" | sudo tee -a /etc/apt/sources.list
             sudo apt-get update
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libenchant1c2a
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libenchant1c2a libstdc++6
 
       - name: Установка wine для Tool1CD (Linux)
         if: startsWith(matrix.os, 'ubuntu')
