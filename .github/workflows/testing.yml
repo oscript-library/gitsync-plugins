@@ -65,7 +65,6 @@ jobs:
             sudo apt-get update
             sudo DEBIAN_FRONTEND=noninteractive apt-get install -y locales libwebkit2gtk-4.0-37
             sudo localedef -i ${{ matrix.locale }} -c -f UTF-8 -A /usr/share/locale/locale.alias ${{ matrix.locale }}.UTF-8
-            sudo rm /opt/1C/v8.3/x86_64/libstdc++.so.6
 
       - name: Установка libenchant1c2a для 8.3.21 (Linux)
         if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.v8_version, '8.3.21')
