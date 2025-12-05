@@ -25,6 +25,17 @@ jobs:
         locale: ['ru_RU']
       fail-fast: false
     steps:
+      - name: Освобождение места
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 20480
+          swap-size-mb: 1024
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
       - name: Установка локали
         if: matrix.os == startsWith(matrix.os, 'windows')
         run: |
@@ -72,7 +83,7 @@ jobs:
           sudo apt install wine -y
 
       - name: Установка платформы 1С
-        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
+        uses: 1CDevFlow/onec-setup-action
         with:
           type: onec # Тип устанавливаемого приложения
           onec_version: ${{ matrix.v8_version }}
@@ -97,7 +108,7 @@ jobs:
           java-version: '17'
 
       - name: Установка EDT
-        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
+        uses: 1CDevFlow/onec-setup-action
         with:
           type: edt
           edt_version: ${{ matrix.edt_version }}

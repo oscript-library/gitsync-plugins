@@ -62,7 +62,7 @@ jobs:
           sudo apt install wine -y
 
       - name: Установка платформы 1С
-        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
+        uses: 1CDevFlow/onec-setup-action
         with:
           type: onec # Тип устанавливаемого приложения
           onec_version: ${{ matrix.v8_version }}
@@ -79,7 +79,7 @@ jobs:
           java-version: '17'
 
       - name: Установка EDT
-        uses: ovcharenko-di/onec-setup-action@fix/cache-ring-commands-cfg
+        uses: 1CDevFlow/onec-setup-action
         with:
           type: edt
           edt_version: ${{ matrix.edt_version }}
