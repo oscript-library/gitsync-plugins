@@ -23,6 +23,17 @@ jobs:
         locale: ['ru_RU']
 
     steps:
+      - name: Освобождение места
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 20480
+          swap-size-mb: 1024
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+          
       - name: Актуализация
         uses: actions/checkout@v4.2.2
         with:
