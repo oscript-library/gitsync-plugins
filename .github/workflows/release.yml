@@ -21,13 +21,13 @@ jobs:
     steps:
       # Загрузка проекта
       - name: Актуализация
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.2.2
 
       # Установка OneScript конкретной версии
       - name: Установка OneScript
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-        uses: otymko/setup-onescript@v1.0
+        uses: otymko/setup-onescript@v1.5
         with:
           version: ${{ matrix.oscript_version }}
 
@@ -41,13 +41,13 @@ jobs:
         run: opm build
 
       - name: Заливка артифактов
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: package.zip
           path: ./${{ matrix.package_mask }}
 
       - name: Заливка в релиз
-        uses: AButler/upload-release-assets@v1.0
+        uses: AButler/upload-release-assets@v3.0
         with:
           files: ./${{ matrix.package_mask }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
