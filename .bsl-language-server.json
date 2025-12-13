@@ -1,0 +1,18 @@
+{
+  "$schema": "https://1c-syntax.github.io/bsl-language-server/configuration/schema.json",
+  "language": "ru",
+  "diagnostics": {
+    "parameters": {
+      "LineLength": {
+        "maxLineLength": 150
+      },
+      "MissingSpace": {
+        "allowMultipleCommas": true
+      },
+      "Typo": {
+        "minWordLength": 3,
+        "userWordsToIgnore": "Закоммитить,Коммитом,Коммита,Коммите,тэг,Тэг,Инкрементально,"
+      }
+    }
+  }
+}
