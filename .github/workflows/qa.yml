@@ -73,7 +73,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
-          sudo apt-get install wine32:i386 --no-install-recommends --no-install-suggests -y
+          sudo apt-get install wine -y
 
       - name: Установка платформы 1С
         uses: 1CDevFlow/onec-setup-action@main
