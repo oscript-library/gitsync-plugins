@@ -29,7 +29,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         uses: easimon/maximize-build-space@master
         with:
-          root-reserve-mb: 20480
+          root-reserve-mb: 18000
           swap-size-mb: 1024
           remove-android: 'true'
           remove-haskell: 'true'
