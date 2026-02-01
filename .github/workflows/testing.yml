@@ -27,15 +27,17 @@ jobs:
     steps:
       - name: Освобождение места
         if: startsWith(matrix.os, 'ubuntu')
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 19000
-          swap-size-mb: 1024
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
-
+        run: |
+          df -h
+          echo "-- Android"
+          sudo rm -rf /usr/local/lib/android
+          echo "-- Haskell"
+          sudo rm -rf /opt/ghc
+          echo "-- CodeQL"
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          echo "-- docker images"
+          sudo docker image prune --all --force
+          df -h
       - name: Установка локали
         if: matrix.os == startsWith(matrix.os, 'windows')
         run: |
@@ -79,8 +81,8 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo dpkg --add-architecture i386
-          sudo apt update
-          sudo apt install wine -y
+          sudo apt-get update
+          sudo apt-get install wine -y
 
       - name: Установка платформы 1С
         uses: 1CDevFlow/onec-setup-action@main
