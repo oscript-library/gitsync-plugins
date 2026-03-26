@@ -95,6 +95,11 @@ jobs:
           ONEC_USERNAME: ${{ secrets.ONEC_USERNAME }}
           ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
 
+      - name: Удаление libstdc++.so из 8.3.21 (Linux)
+        if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.v8_version, '8.3.21')
+        run: |
+            sudo find /opt/1cv8/ -name "libstdc++.so*" -delete
+
       - name: Установка Java 11
         if: startsWith(matrix.edt_version, '2023')
         uses: actions/setup-java@v4
