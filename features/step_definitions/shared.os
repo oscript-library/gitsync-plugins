@@ -4,6 +4,7 @@
 // BSLLS:MissingReturnedValueDescription-off
 
 // Реализация шагов BDD-фич/сценариев c помощью фреймворка https://github.com/artbear/1bdd
+#Использовать 1commands
 #Использовать gitrunner
 #Использовать asserts
 #Использовать tempfiles
