@@ -100,14 +100,14 @@ jobs:
 
       - name: Установка Java 11
         if: startsWith(matrix.edt_version, '2023')
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '11'
 
       - name: Установка Java 17
         if: startsWith(matrix.edt_version, '2024')
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
