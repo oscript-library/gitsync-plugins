@@ -41,7 +41,7 @@ jobs:
         run: opm build
 
       - name: Заливка артифактов
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: package.zip
           path: ./${{ matrix.package_mask }}
