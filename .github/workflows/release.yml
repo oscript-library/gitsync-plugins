@@ -21,7 +21,7 @@ jobs:
     steps:
       # Загрузка проекта
       - name: Актуализация
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v7.0.1
 
       # Установка OneScript конкретной версии
       - name: Установка OneScript
@@ -41,13 +41,13 @@ jobs:
         run: opm build
 
       - name: Заливка артифактов
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: package.zip
           path: ./${{ matrix.package_mask }}
 
       - name: Заливка в релиз
-        uses: AButler/upload-release-assets@v3.0
+        uses: AButler/upload-release-assets@v4.0
         with:
           files: ./${{ matrix.package_mask }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
