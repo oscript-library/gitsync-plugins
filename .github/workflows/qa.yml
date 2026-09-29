@@ -40,11 +40,12 @@ jobs:
           df -h
           
       - name: Актуализация
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v7.0.1
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event.pull_request.head.sha || github.ref_name }}
           fetch-depth: 0
+          allow-unsafe-pr-checkout: true
 
       # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
       - name: Извлечение имени текущей ветки
@@ -89,7 +90,7 @@ jobs:
           ONEC_PASSWORD: ${{ secrets.ONEC_PASSWORD }}
 
       - name: Установка Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
