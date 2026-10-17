@@ -16,7 +16,7 @@ jobs:
     cache-mode: write
     strategy:
       matrix:
-        oscript_version: ['1.9.2', '2.0.0']
+        oscript_version: ['2.2.1']
         v8_version: ['8.3.21.1624', '8.3.24.1691']
         edt_version: ['2023.3.6', '2024.2.5']
         os: [windows-latest, ubuntu-22.04]
